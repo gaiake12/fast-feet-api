@@ -13,3 +13,44 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id             String   @id @default(uuid())
+  name           String
+  cpf            String   @unique
+  hashedPassword String   @map("hashed_password")
+  isAdmin        Boolean  @default(false) @map("is_admin")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  orders         Order[]
+}
+
+enum OrderStatus {
+  AVAILABLE
+  ASSIGNED
+  DELIVERED
+  RETURNED
+}
+
+model Order {
+  id          String   @id @default(uuid())
+  status      String
+  userId      String
+  deliveryMan User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Recipient {
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  address    String
+  number     String
+  complement String
+  city       String
+  state      String
+  zipCode    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
