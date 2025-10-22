@@ -1,0 +1,13 @@
+import { z } from "zod";
+
+const {{lower name}}Validator = z.object({
+
+});
+
+type {{name}}ValidatorProps = z.infer<typeof {{lower name}}Validator>;
+
+export class {{name}}Validator {
+  async validate(data: unknown): Promise<{{name}}ValidatorProps> {
+    return {{lower name}}Validator.parseAsync(data);
+  }
+}

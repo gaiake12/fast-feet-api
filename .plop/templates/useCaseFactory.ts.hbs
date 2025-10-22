@@ -1,0 +1,21 @@
+import { FastifyRequest, FastifyReply } from "fastify";
+
+import { {{name}} } from "./{{name}}";
+import { {{name}}Validator } from "./{{name}}Validator";
+import { {{name}}Controller } from "./{{name}}Controller";
+
+import prisma from "@/shared/infra/prisma/client";
+
+export class {{name}}Factory {
+  static async make(request: FastifyRequest, response: FastifyReply) {
+    const {{lower name}}UseCase = new {{name}}(prisma);
+    const {{lower name}}Validator = new {{name}}Validator();
+
+    const {{lower name}}Controller = new {{name}}Controller(
+      {{lower name}}UseCase,
+      {{lower name}}Validator
+    ); 
+
+    return {{lower name}}Controller.handle(request, response);
+  }
+}

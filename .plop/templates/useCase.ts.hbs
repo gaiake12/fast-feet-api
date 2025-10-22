@@ -1,0 +1,15 @@
+import type { PrismaClient } from "@prisma/client";
+
+interface {{name}}Request {
+}
+
+interface {{name}}Response {
+}
+
+export class {{name}} {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async execute(data:{{name}}Request): Promise<{{name}}Response> {
+    
+  }
+}

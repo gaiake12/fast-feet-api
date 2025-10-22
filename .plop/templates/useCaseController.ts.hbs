@@ -1,0 +1,17 @@
+import { FastifyReply, FastifyRequest } from "fastify";
+import { {{name}}Validator } from "./{{name}}Validator";
+import { {{name}} } from "./{{name}}";
+
+export class {{name}}Controller {
+  constructor(
+    private readonly {{lower name}}UseCase: {{name}},
+    private readonly {{lower name}}Validator: {{name}}Validator
+  ) {}
+
+  async handle(request: FastifyRequest, response: FastifyReply) {
+    const data = await this.{{lower name}}Validator.validate(request.body);
+
+    const {{lower name}}Response = await this.{{lower name}}UseCase.execute(data);
+    return response.send({{lower name}}Response);
+  }
+}

@@ -12,7 +12,8 @@
     "zod": "^4.1.11"
   },
   "scripts": {
-    "dev": "tsx watch src/infra/http/app.ts"
+    "dev": "tsx watch src/infra/http/app.ts",
+    "make:usecase": "plop --plopfile .plop/plopfile.js"
   },
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.2.2",

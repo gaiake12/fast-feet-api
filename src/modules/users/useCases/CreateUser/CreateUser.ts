@@ -1,6 +1,7 @@
-import { User } from "@/shared/domain/entities/user";
-import { UsersRepository } from "@/shared/infra/providers/database/adapter/UsersRepository";
 import { hash } from "bcryptjs";
+import type { PrismaClient } from "@prisma/client";
+
+import { User } from "@/shared/domain/entities/user";
 
 interface CreateUserRequest {
   name: string;
@@ -9,15 +10,17 @@ interface CreateUserRequest {
 }
 
 export class CreateUser {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(private readonly prisma: PrismaClient) {}
 
   async execute({ password, ...data }: CreateUserRequest): Promise<User> {
     const hashedPassword = await hash(password, 8);
 
-    const user = await this.usersRepository.create({
-      ...data,
-      hashedPassword,
-      isAdmin: false,
+    const user = await this.prisma.user.create({
+      data: {
+        ...data,
+        hashedPassword,
+        isAdmin: false,
+      },
     });
     return user;
   }
