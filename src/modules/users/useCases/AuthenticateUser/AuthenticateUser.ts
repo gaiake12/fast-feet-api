@@ -1,6 +1,9 @@
 import { compare } from "bcryptjs";
+import { addDays } from "date-fns";
 import { PrismaClient, User } from "@prisma/client";
+
 import { JWTProvider } from "@/shared/infra/providers/JWTProvider/models/JWTProvider";
+import { authConfig } from "@/config/authConfig";
 
 interface AuthenticateUserRequest {
   cpf: string;
@@ -49,23 +52,32 @@ export class AuthenticateUser {
       throw new Error("Invalid password");
     }
 
+    const currentDate = new Date();
+
     const accessToken = await this.jwtProvider.sign({
       sub: user.id,
-      exp: new Date().getTime() + 1000 * 60 * 60 * 24, // 1 day
-      iat: new Date().getTime(),
+      exp: addDays(currentDate, authConfig.jwt.expiresIn).getTime(),
+      iat: currentDate.getTime(),
     });
 
     const refreshToken = await this.jwtProvider.sign({
       sub: user.id,
-      exp: new Date().getTime() + 1000 * 60 * 60 * 24 * 30, // 30 days
-      iat: new Date().getTime(),
+      exp: addDays(currentDate, authConfig.refreshToken.expiresIn).getTime(),
+      iat: currentDate.getTime(),
     });
 
-    await this.prisma.refreshToken.create({
-      data: {
+    await this.prisma.refreshToken.upsert({
+      where: {
+        userId: user.id,
+      },
+      create: {
         userId: user.id,
         token: refreshToken,
-        expiresAt: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30), // 30 days
+        expiresAt: addDays(currentDate, authConfig.refreshToken.expiresIn),
+      },
+      update: {
+        token: refreshToken,
+        expiresAt: addDays(currentDate, authConfig.refreshToken.expiresIn),
       },
     });
 
