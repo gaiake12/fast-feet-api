@@ -20,11 +20,20 @@ export const ensureIsAuthenticated = async (
 
   const user = await prisma.user.findUnique({
     where: { id: decodedToken.sub },
+    select: {
+      id: true,
+      isAdmin: true,
+    },
   });
 
   if (!user) {
     return reply.status(401).send({ message: "Unauthorized" });
   }
+
+  request.user = {
+    id: user.id,
+    isAdmin: user.isAdmin,
+  };
 
   return;
 };
