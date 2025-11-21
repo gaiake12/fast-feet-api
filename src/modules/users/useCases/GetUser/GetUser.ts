@@ -13,7 +13,7 @@ export class GetUser {
 
   async execute({ id }: GetUserRequest): Promise<GetUserResponse> {
     const user = await this.prisma.user.findUnique({
-      where: { id: id },
+      where: { id },
     });
 
     if (!user) {
