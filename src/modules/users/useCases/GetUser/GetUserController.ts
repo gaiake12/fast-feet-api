@@ -11,12 +11,6 @@ export class GetUserController {
   async handle(request: FastifyRequest, response: FastifyReply) {
     const data = await this.getUserValidator.validate(request.params);
 
-    const { id } = request.user;
-
-    if (id !== data.id && !request.user.isAdmin) {
-      return response.status(403).send({ message: "Forbidden" });
-    }
-
     const getUserResponse = await this.getUserUseCase.execute(data);
     return response.send(getUserResponse);
   }

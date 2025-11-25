@@ -14,13 +14,13 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(uuid())
+  id             String        @id @default(uuid())
   name           String
-  cpf            String   @unique
-  hashedPassword String   @map("hashed_password")
-  isAdmin        Boolean  @default(false) @map("is_admin")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  cpf            String        @unique
+  hashedPassword String        @map("hashed_password")
+  isAdmin        Boolean       @default(false) @map("is_admin")
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
   orders         Order[]
   refreshTokens  RefreshToken?
 }
@@ -36,31 +36,40 @@ model Order {
   id          String   @id @default(uuid())
   status      String
   userId      String
-  deliveryMan User     @relation(fields: [userId], references: [id])
+  deliveryPerson User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
-model Recipient {
-  id         String   @id @default(uuid())
-  name       String
-  email      String   @unique
-  address    String
-  number     String
-  complement String
-  city       String
-  state      String
-  zipCode    String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model Receiver {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  address       Address?
+}
+
+model Address {
+  receiverId       String      @id @unique @map("receiver_id")
+  street       String
+  number       String
+  complement   String?
+  neighborhood String
+  city         String
+  state        String
+  zipCode      String
+  latitude     Float
+  longitude    Float
+  receiver         Receiver        @relation(fields: [receiverId], references: [id])
 }
 
 model RefreshToken {
-  id String @id @default(uuid())
-  userId String @unique
-  token String @unique
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  token     String   @unique
   expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user User @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
