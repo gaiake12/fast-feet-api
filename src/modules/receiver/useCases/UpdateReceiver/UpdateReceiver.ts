@@ -30,6 +30,14 @@ export class UpdateReceiver {
     address,
     ...data
   }: UpdateReceiverRequest): Promise<UpdateReceiverResponse> {
+    const hasReceiver = await this.prisma.receiver.findUnique({
+      where: { id },
+    });
+
+    if (!hasReceiver) {
+      throw new Error("Receiver not found");
+    }
+
     const receiver = await this.prisma.receiver.update({
       where: { id },
       data: {
