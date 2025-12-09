@@ -35,8 +35,10 @@ enum OrderStatus {
 model Order {
   id          String   @id @default(uuid())
   status      String
-  userId      String
-  deliveryPerson User     @relation(fields: [userId], references: [id])
+  deliveryPersonId      String
+  receiverId String
+  deliveryPerson User     @relation(fields: [deliveryPersonId], references: [id])
+  receiver Receiver @relation(fields: [receiverId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -48,6 +50,7 @@ model Receiver {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   address       Address?
+  receiverOrders Order[] 
 }
 
 model Address {
