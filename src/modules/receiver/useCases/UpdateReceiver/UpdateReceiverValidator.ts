@@ -2,7 +2,7 @@ import { z } from "zod";
 import { addressSchema } from "../../helpers/addressSchema";
 
 const updateReceiverValidator = z.object({
-  id: z.uuid(),
+  receiverId: z.uuid(),
   name: z.string().min(1),
   email: z.email(),
   address: addressSchema,

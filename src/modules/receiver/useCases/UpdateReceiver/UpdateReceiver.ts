@@ -1,7 +1,7 @@
 import type { Address, PrismaClient, Receiver } from "@prisma/client";
 
 interface UpdateReceiverRequest {
-  id: string;
+  receiverId: string;
   name: string;
   email: string;
   address: Pick<
@@ -26,12 +26,12 @@ export class UpdateReceiver {
   constructor(private readonly prisma: PrismaClient) {}
 
   async execute({
-    id,
+    receiverId,
     address,
     ...data
   }: UpdateReceiverRequest): Promise<UpdateReceiverResponse> {
     const hasReceiver = await this.prisma.receiver.findUnique({
-      where: { id },
+      where: { id: receiverId },
     });
 
     if (!hasReceiver) {
@@ -39,7 +39,7 @@ export class UpdateReceiver {
     }
 
     const receiver = await this.prisma.receiver.update({
-      where: { id },
+      where: { id: receiverId },
       data: {
         ...data,
         address: {
