@@ -1,7 +1,5 @@
 import { hash } from "bcryptjs";
-import type { PrismaClient } from "@prisma/client";
-
-import { User } from "@/shared/domain/entities/user";
+import type { PrismaClient, User } from "@prisma/client";
 
 interface CreateUserRequest {
   name: string;
