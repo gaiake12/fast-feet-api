@@ -1,4 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
+import { ReceiverNotFound } from "../../errors/ReceiverNotFound";
 
 interface DeleteReceiverRequest {
   receiverId: string;
@@ -15,7 +16,7 @@ export class DeleteReceiver {
     });
 
     if (!hasReceiver) {
-      throw new Error("Receiver not found");
+      throw new ReceiverNotFound();
     }
 
     await this.prisma.receiver.delete({ where: { id: data.receiverId } });

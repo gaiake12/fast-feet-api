@@ -1,4 +1,5 @@
 import type { Address, PrismaClient, Receiver } from "@prisma/client";
+import { ReceiverNotFound } from "../../errors/ReceiverNotFound";
 
 interface UpdateReceiverRequest {
   receiverId: string;
@@ -35,7 +36,7 @@ export class UpdateReceiver {
     });
 
     if (!hasReceiver) {
-      throw new Error("Receiver not found");
+      throw new ReceiverNotFound();
     }
 
     const receiver = await this.prisma.receiver.update({
