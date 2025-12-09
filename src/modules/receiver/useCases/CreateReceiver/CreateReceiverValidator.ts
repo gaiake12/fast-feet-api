@@ -1,19 +1,10 @@
 import { z } from "zod";
+import { addressSchema } from "../../helpers/addressSchema";
 
 const createReceiverValidator = z.object({
   name: z.string().min(1),
   email: z.email(),
-  address: z.object({
-    street: z.string().min(1),
-    number: z.string().min(1),
-    complement: z.string().optional(),
-    neighborhood: z.string().min(1),
-    city: z.string().min(1),
-    state: z.string().min(1),
-    zipCode: z.string().min(1),
-    latitude: z.number(),
-    longitude: z.number(),
-  }),
+  address: addressSchema,
 });
 
 type CreateReceiverValidatorProps = z.infer<typeof createReceiverValidator>;

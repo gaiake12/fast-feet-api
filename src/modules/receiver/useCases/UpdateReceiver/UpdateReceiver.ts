@@ -1,6 +1,7 @@
 import type { Address, PrismaClient, Receiver } from "@prisma/client";
 
-interface CreateReceiverRequest {
+interface UpdateReceiverRequest {
+  id: string;
   name: string;
   email: string;
   address: Pick<
@@ -17,22 +18,24 @@ interface CreateReceiverRequest {
   >;
 }
 
-interface CreateReceiverResponse {
+interface UpdateReceiverResponse {
   receiver: Receiver;
 }
 
-export class CreateReceiver {
+export class UpdateReceiver {
   constructor(private readonly prisma: PrismaClient) {}
 
   async execute({
+    id,
     address,
     ...data
-  }: CreateReceiverRequest): Promise<CreateReceiverResponse> {
-    const receiver = await this.prisma.receiver.create({
+  }: UpdateReceiverRequest): Promise<UpdateReceiverResponse> {
+    const receiver = await this.prisma.receiver.update({
+      where: { id },
       data: {
         ...data,
         address: {
-          create: address,
+          update: { ...address },
         },
       },
     });
