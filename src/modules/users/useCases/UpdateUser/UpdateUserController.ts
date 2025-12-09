@@ -9,7 +9,10 @@ export class UpdateUserController {
   ) {}
 
   async handle(request: FastifyRequest, response: FastifyReply) {
-    const data = await this.updateUserValidator.validate(request.body);
+    const data = await this.updateUserValidator.validate({
+      ...request.body,
+      ...request.params,
+    });
 
     const updateUserResponse = await this.updateUserUseCase.execute(data);
     return response.send(updateUserResponse);
